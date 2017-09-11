@@ -46,6 +46,7 @@ public class AudioPlaylist extends Application {
     final Button play = new Button("Pause");
     final Button stop = new Button("Stop");
     final Button back = new Button("Back");
+    final Button replay = new Button("replay");
   Button invisiblePause = new Button("Pause");
    List<MediaPlayer> players = new ArrayList<MediaPlayer>();
     invisiblePause.setVisible(false);
@@ -68,7 +69,7 @@ public class AudioPlaylist extends Application {
       invisiblePause,
       VBoxBuilder.create().spacing(10).children(
        HBoxBuilder.create().spacing(10).alignment(Pos.BASELINE_LEFT).children(open,stop,back,currentlyPlaying,totalPlaying).build(),
-        HBoxBuilder.create().spacing(10).alignment(Pos.CENTER).children(skip, play, progress, mediaView).build()
+        HBoxBuilder.create().spacing(10).alignment(Pos.CENTER).children(skip, play, replay, progress, mediaView).build()
       ).build()
     );
     
@@ -146,6 +147,17 @@ public class AudioPlaylist extends Application {
         back.setDisable(false);
       }
     });
+             
+      // allow the user to replay a track.
+    replay.setOnAction(new EventHandler<ActionEvent>() {
+      @Override public void handle(ActionEvent actionEvent) {
+        final MediaPlayer curPlayer = mediaView.getMediaPlayer();
+        MediaPlayer nextPlayer = players.get((players.indexOf(curPlayer)));
+        mediaView.setMediaPlayer(nextPlayer);
+        progress.setProgress(0);
+        curPlayer.stop();
+        nextPlayer.play();
+              }
 
     // allow the user to play or pause a track.
     play.setOnAction(new EventHandler<ActionEvent>() {
